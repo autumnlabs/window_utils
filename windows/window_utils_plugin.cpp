@@ -13,7 +13,7 @@
 namespace
 {
 
-class WindowUtils : public flutter::Plugin
+class WindowUtilsPlugin : public flutter::Plugin
 {
   RECT normalRect;
 
@@ -21,10 +21,10 @@ public:
   static void RegisterWithRegistrar(flutter::PluginRegistrar *registrar);
 
   // Creates a plugin that communicates on the given channel.
-  WindowUtils(
+  WindowUtilsPlugin(
       std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> channel);
 
-  virtual ~WindowUtils();
+  virtual ~WindowUtilsPlugin();
 
 private:
   // Called when a method is called on |channel_|;
@@ -37,7 +37,7 @@ private:
 };
 
 // static
-void WindowUtils::RegisterWithRegistrar(flutter::PluginRegistrar *registrar)
+void WindowUtilsPlugin::RegisterWithRegistrar(flutter::PluginRegistrar *registrar)
 {
   auto channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
@@ -45,7 +45,7 @@ void WindowUtils::RegisterWithRegistrar(flutter::PluginRegistrar *registrar)
           &flutter::StandardMethodCodec::GetInstance());
   auto *channel_pointer = channel.get();
 
-  auto plugin = std::make_unique<WindowUtils>(std::move(channel));
+  auto plugin = std::make_unique<WindowUtilsPlugin>(std::move(channel));
 
   channel_pointer->SetMethodCallHandler(
       [plugin_pointer = plugin.get()](const auto &call, auto result) {
@@ -55,13 +55,13 @@ void WindowUtils::RegisterWithRegistrar(flutter::PluginRegistrar *registrar)
   registrar->AddPlugin(std::move(plugin));
 }
 
-WindowUtils::WindowUtils(
+WindowUtilsPlugin::WindowUtilsPlugin(
     std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> channel)
     : channel_(std::move(channel)) {}
 
-WindowUtils::~WindowUtils(){};
+WindowUtilsPlugin::~WindowUtilsPlugin(){};
 
-void WindowUtils::HandleMethodCall(
+void WindowUtilsPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result)
 {
@@ -206,8 +206,8 @@ void WindowUtils::HandleMethodCall(
     if (isMaximized)
     {
       RECT rect = normalRect;
-      double width = rect.right - rect.left;
-      double height = rect.bottom - rect.top;
+      int width = (int)(rect.right - rect.left);
+      int height = (int)(rect.bottom - rect.top);
       int x = rect.left;
       int y = rect.top;
       MoveWindow(hWnd, x, y, width, height, true);
@@ -215,8 +215,8 @@ void WindowUtils::HandleMethodCall(
     else
     {
       RECT rect = rectScreen;
-      double width = rect.right - rect.left;
-      double height = rect.bottom - rect.top;
+      int width = (int)(rect.right - rect.left);
+      int height = (int)(rect.bottom - rect.top);
       int x = rect.left;
       int y = rect.top;
       MoveWindow(hWnd, x, y, width, height, true);
@@ -243,15 +243,15 @@ void WindowUtils::HandleMethodCall(
     RECT rectScreen;
     if (GetWindowRect(hWndScreen, &rectScreen))
     {
-      double screenWidth = rectScreen.right;
-      double screenHeight = rectScreen.bottom;
-      double centerX = screenWidth / 2;
-      double centerY = screenHeight / 2;
+      // double screenWidth = rectScreen.right;
+      // double screenHeight = rectScreen.bottom;
+      // double centerX = screenWidth / 2;
+      // double centerY = screenHeight / 2;
 
       if (GetWindowRect(hWnd, &rect))
       {
-        double width = rect.right - rect.left;
-        double height = rect.bottom - rect.top;
+        int width = (int)(rect.right - rect.left);
+        int height = (int)(rect.bottom - rect.top);
         int x = ((rectScreen.right - rectScreen.left) / 2 - width / 2);
         int y = ((rectScreen.bottom - rectScreen.top) / 2 - height / 2);
         success = MoveWindow(hWnd, x, y, width, height, true);
@@ -264,15 +264,15 @@ void WindowUtils::HandleMethodCall(
   {
     const flutter::EncodableValue *args = method_call.arguments();
     const flutter::EncodableMap &map = args->MapValue();
-    double width = map.at(flutter::EncodableValue("width")).DoubleValue();
-    double height = map.at(flutter::EncodableValue("height")).DoubleValue();
+    int width = (int)map.at(flutter::EncodableValue("width")).DoubleValue();
+    int height = (int)map.at(flutter::EncodableValue("height")).DoubleValue();
     HWND hWnd = GetActiveWindow();
     RECT rect;
     bool success = false;
     if (GetWindowRect(hWnd, &rect))
     {
-      double x = rect.left;
-      double y = rect.top;
+      int x = (int)rect.left;
+      int y = (int)rect.top;
       success = MoveWindow(hWnd, x, y, width, height, true);
     }
     flutter::EncodableValue response(success);
@@ -282,15 +282,15 @@ void WindowUtils::HandleMethodCall(
   {
     const flutter::EncodableValue *args = method_call.arguments();
     const flutter::EncodableMap &map = args->MapValue();
-    double x = map.at(flutter::EncodableValue("x")).DoubleValue();
-    double y = map.at(flutter::EncodableValue("y")).DoubleValue();
+    int x = (int)map.at(flutter::EncodableValue("x")).DoubleValue();
+    int y = (int)map.at(flutter::EncodableValue("y")).DoubleValue();
     HWND hWnd = GetActiveWindow();
     RECT rect;
     bool success = false;
     if (GetWindowRect(hWnd, &rect))
     {
-      double width = rect.right - rect.left;
-      double height = rect.bottom - rect.top;
+      int width = (int)(rect.right - rect.left);
+      int height = (int)(rect.bottom - rect.top);
       success = MoveWindow(hWnd, x, y, width, height, true);
     }
     flutter::EncodableValue response(success);
@@ -334,12 +334,12 @@ void WindowUtils::HandleMethodCall(
 
 } // namespace
 
-void WindowUtilsRegisterWithRegistrar(
+void WindowUtilsPluginRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar)
 {
   // The plugin registrar owns the plugin, registered callbacks, etc., so must
   // remain valid for the life of the application.
   static auto *plugin_registrar = new flutter::PluginRegistrar(registrar);
 
-  WindowUtils::RegisterWithRegistrar(plugin_registrar);
+  WindowUtilsPlugin::RegisterWithRegistrar(plugin_registrar);
 }
