@@ -66,7 +66,7 @@ void WindowUtilsPlugin::HandleMethodCall(
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result)
 {
   std::string method = method_call.method_name();
-  printf("Method is %s \n", method.c_str());
+
   if (method.compare("hideTitleBar") == 0)
   {
     HWND hWnd = GetActiveWindow();
@@ -324,6 +324,81 @@ void WindowUtilsPlugin::HandleMethodCall(
       umap[flutter::EncodableValue("offsetY")] = flutter::EncodableValue(offsetY);
     }
     flutter::EncodableValue response(umap);
+    result->Success(&response);
+  }
+  else if (method.compare("setCursor") == 0)
+  {
+    const flutter::EncodableValue *args = method_call.arguments();
+    const flutter::EncodableMap &map = args->MapValue();
+    std::string type = map.at(flutter::EncodableValue("type")).StringValue();
+    LPWSTR cursor = IDC_ARROW;
+
+    // Map type to cursor
+    if (type == "beamVertical")
+    {
+      cursor = IDC_IBEAM;
+    }
+    else if (type == "beamHorizontial")
+    {
+      cursor = IDC_IBEAM;
+    }
+    else if (type == "crossHair")
+    {
+      cursor = IDC_CROSS;
+    }
+    else if (type == "closedHand")
+    {
+      cursor = IDC_SIZEALL;
+    }
+    else if (type == "openHand")
+    {
+      cursor = IDC_SIZEALL;
+    }
+    else if (type == "pointingHand")
+    {
+      cursor = IDC_HAND;
+    }
+    else if (type == "resizeLeft")
+    {
+      cursor = IDC_SIZEWE;
+    }
+    else if (type == "resizeRight")
+    {
+      cursor = IDC_SIZEWE;
+    }
+    else if (type == "resizeLeftRight")
+    {
+      cursor = IDC_SIZEWE;
+    }
+    else if (type == "resizeUp")
+    {
+      cursor = IDC_SIZENS;
+    }
+    else if (type == "resizeDown")
+    {
+      cursor = IDC_SIZENS;
+    }
+    else if (type == "resizeUpDown")
+    {
+      cursor = IDC_SIZENS;
+    }
+    else if (type == "notAllowed")
+    {
+      cursor = IDC_NO;
+    }
+
+    // Set cursor
+    SetCursor(LoadCursor(NULL, cursor));
+
+    flutter::EncodableValue response(true);
+    result->Success(&response);
+  }
+  else if (method.compare("resetCursor") == 0)
+  {
+    // Set cursor to default arrow
+    SetCursor(LoadCursor(NULL, IDC_ARROW));
+
+    flutter::EncodableValue response(true);
     result->Success(&response);
   }
   else
