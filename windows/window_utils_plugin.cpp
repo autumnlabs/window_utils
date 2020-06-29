@@ -70,8 +70,6 @@ namespace
       HWND hWnd = GetActiveWindow();
       SetMenu(hWnd, NULL);
       LONG lStyle = GetWindowLong(hWnd, GWL_STYLE);
-      // lStyle &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU);
-      // lStyle &= WS_DLGFRAME;
       lStyle &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_DLGFRAME);
       SetWindowLong(hWnd, GWL_STYLE, lStyle);
       LONG flags = SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER;
