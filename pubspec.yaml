@@ -17,7 +17,7 @@ flutter:
       macos:
         pluginClass: WindowUtils
       windows:
-        pluginClass: WindowUtils
+        pluginClass: WindowUtilsPlugin
 
 dependencies:
   flutter:
