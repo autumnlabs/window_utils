@@ -15,6 +15,7 @@ namespace
   class WindowUtilsPlugin : public flutter::Plugin
   {
     RECT normalRect;
+    RECT premaxWindowRect;
 
   public:
     static void RegisterWithRegistrar(flutter::PluginRegistrar *registrar);
@@ -30,6 +31,15 @@ namespace
     void HandleMethodCall(
         const flutter::MethodCall<flutter::EncodableValue> &method_call,
         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+
+    // Returns whether or not the window is currently maximized.
+    bool GetIsMaximized();
+
+    // Maximize window.
+    void MaximizeWindow();
+
+    // Unmaximize window.
+    void UnmaximizeWindow();
 
     // The MethodChannel used for communication with the Flutter engine.
     std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> channel_;
@@ -155,9 +165,14 @@ namespace
     }
     else if (method.compare("startDrag") == 0)
     {
+      if (GetIsMaximized()) {
+        UnmaximizeWindow();
+      }
+
       HWND hWnd = GetActiveWindow();
       ReleaseCapture();
       SendMessage(hWnd, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+
       flutter::EncodableValue response(true);
       result->Success(&response);
     }
@@ -177,70 +192,41 @@ namespace
     }
     else if (method.compare("windowTitleDoubleTap") == 0)
     {
-      HWND hWnd = GetActiveWindow();
-      HWND hWndScreen = GetDesktopWindow();
-      RECT rectScreen;
-      GetWindowRect(hWndScreen, &rectScreen);
-      double padding = 5.0;
-      bool isMaximized = false;
-      RECT activeRect;
-      GetWindowRect(hWnd, &activeRect);
-
-      if (activeRect.top <= rectScreen.top + padding)
+      if (GetIsMaximized())
       {
-        isMaximized = true;
-      }
-
-      if (activeRect.bottom >= rectScreen.bottom - padding)
-      {
-        isMaximized = true;
-      }
-
-      if (activeRect.left <= rectScreen.left + padding)
-      {
-        isMaximized = true;
-      }
-
-      if (activeRect.right >= rectScreen.right - padding)
-      {
-        isMaximized = true;
-      }
-
-      if (!isMaximized)
-      {
-        GetWindowRect(hWnd, &normalRect);
-      }
-
-      if (isMaximized)
-      {
-        RECT rect = normalRect;
-        int width = (int)(rect.right - rect.left);
-        int height = (int)(rect.bottom - rect.top);
-        int x = rect.left;
-        int y = rect.top;
-        MoveWindow(hWnd, x, y, width, height, true);
+        UnmaximizeWindow();
       }
       else
       {
-        RECT rect = rectScreen;
-        int width = (int)(rect.right - rect.left);
-        int height = (int)(rect.bottom - rect.top);
-        int x = rect.left;
-        int y = rect.top;
-        MoveWindow(hWnd, x, y, width, height, true);
+        MaximizeWindow();
       }
-
-      // ReleaseCapture();
-      // InvalidateRect(hWnd, NULL, TRUE);
-      // UpdateWindow(hWnd);
 
       flutter::EncodableValue response(true);
       result->Success(&response);
     }
     else if (method.compare("maxWindow") == 0)
     {
-      HWND hWnd = GetActiveWindow();
-      ShowWindow(hWnd, SW_SHOWMAXIMIZED);
+      MaximizeWindow();
+      flutter::EncodableValue response(true);
+      result->Success(&response);
+    }
+    else if (method.compare("unmaxWindow") == 0)
+    {
+      UnmaximizeWindow();
+      flutter::EncodableValue response(true);
+      result->Success(&response);
+    }
+    else if (method.compare("toggleMaxWindow") == 0)
+    {
+      if (GetIsMaximized())
+      {
+        UnmaximizeWindow();
+      }
+      else
+      {
+        MaximizeWindow();
+      }
+
       flutter::EncodableValue response(true);
       result->Success(&response);
     }
@@ -417,6 +403,57 @@ namespace
     {
       result->NotImplemented();
     }
+  }
+
+  bool WindowUtilsPlugin::GetIsMaximized()
+  {
+    HWND hWnd = GetActiveWindow();
+    RECT rectScreen;
+    GetWindowRect(hWnd, &rectScreen);
+
+    // Get monitor info
+    HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO monitorInfo = {0};
+    monitorInfo.cbSize = sizeof(MONITORINFO);
+    GetMonitorInfo(hMonitor, &monitorInfo);
+
+    return rectScreen.top <= monitorInfo.rcWork.top &&
+      rectScreen.bottom >= monitorInfo.rcWork.bottom &&
+      rectScreen.left <= monitorInfo.rcWork.left &&
+      rectScreen.right >= monitorInfo.rcWork.right;
+      
+  }
+
+  void WindowUtilsPlugin::MaximizeWindow()
+  {
+    HWND hWnd = GetActiveWindow();
+    RECT curRect;
+    GetWindowRect(hWnd, &curRect);
+    premaxWindowRect = curRect;
+
+    // Get monitor info
+    HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO monitorInfo = {0};
+    monitorInfo.cbSize = sizeof(MONITORINFO);
+    GetMonitorInfo(hMonitor, &monitorInfo);
+
+    // Set window size
+    int width = (int)(monitorInfo.rcWork.right - monitorInfo.rcWork.left);
+    int height = (int)(monitorInfo.rcWork.bottom - monitorInfo.rcWork.top);
+    int x = monitorInfo.rcWork.left;
+    int y = monitorInfo.rcWork.top;
+    MoveWindow(hWnd, x, y, width, height, true);
+  }
+
+  void WindowUtilsPlugin::UnmaximizeWindow()
+  {
+    HWND hWnd = GetActiveWindow();
+
+    int width = (int)(premaxWindowRect.right - premaxWindowRect.left);
+    int height = (int)(premaxWindowRect.bottom - premaxWindowRect.top);
+    int x = premaxWindowRect.left;
+    int y = premaxWindowRect.top;
+    MoveWindow(hWnd, x, y, width, height, true);
   }
 }
 
