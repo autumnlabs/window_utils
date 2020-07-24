@@ -1,24 +1,17 @@
-# This repo is just a mirror
-
 # window_utils
 
 A Flutter plugin for Desktop that controls the window instance.
 
+Modified for Windows support and other improvements.
+
 ## Installing
 
-- Install the package from https://pub.dev in your pubspec.yaml
-
-```yaml
-dependencies:
-  window_utils: any
-```
-
-or the latest from git
+- Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
   window_utils:
-    git: https://github.com/rive-app/window_utils
+    git: https://github.com/autumnlabs/window_utils
 ```
 
 ### MacOS
@@ -55,7 +48,7 @@ WidgetsBinding.instance.addPostFrameCallback(
 );
 ```
 
-![no_title](https://github.com/adrianjagielak/window_utils/blob/master/doc/macos.png?raw=true)
+![no_title](https://github.com/autumnlabs/window_utils/blob/master/doc/macos.png?raw=true)
 
 #### Show the default title bar
 
@@ -75,7 +68,7 @@ This executes a close command to the window. It can still be restored by the OS 
 WindowUtils.showTitleBar();
 ```
 
-#### Minimize the window
+#### Minimize window
 
 > WINDOWS ONLY
 
@@ -87,24 +80,42 @@ This will minimize the window if you hide the title bar and/or have a custom min
 WindowUtils.minWindow();
 ```
 
-#### Maximize the window
+#### Maximize window
 
 > WINDOWS ONLY
 
-> Required to implement if you hide the title bar
-
-This will maximize the window if you hide the title bar and/or have a custom maximize button.
+Maximize the window.
 
 ```dart
 WindowUtils.maxWindow();
 ```
 
-#### Center the window
+#### Unmaximize window
 
-This will center the window.
+> WINDOWS ONLY
+
+Unmaximize the window.
 
 ```dart
-WindowUtils.maxWindow();
+WindowUtils.unmaxWindow();
+```
+
+#### Toggle maximize
+
+> WINDOWS ONLY
+
+Toggle window maximized state.
+
+```dart
+WindowUtils.toggleMaxWindow();
+```
+
+#### Center window
+
+Center the window.
+
+```dart
+WindowUtils.centerWindow();
 ```
 
 #### Set the window position
@@ -482,5 +493,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
 ```

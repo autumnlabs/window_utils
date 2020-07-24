@@ -29,6 +29,16 @@ class WindowUtils {
     return _channel.invokeMethod<bool>('maxWindow');
   }
 
+  /// [Windows] Only
+  static Future<bool> unmaxWindow() {
+    return _channel.invokeMethod<bool>('unmaxWindow');
+  }
+
+  /// [Windows] Only
+  static Future<bool> toggleMaxWindow() {
+    return _channel.invokeMethod<bool>('toggleMaxWindow');
+  }
+
   static Future<bool> centerWindow() {
     return _channel.invokeMethod<bool>('centerWindow');
   }
