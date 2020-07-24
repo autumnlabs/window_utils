@@ -1,13 +1,9 @@
 #include "window_utils_plugin.h"
 
-#include <windows.h>
 #include <memory>
 #include <sstream>
 #include <unordered_map>
 #include <VersionHelpers.h>
-#include <flutter/method_channel.h>
-#include <flutter/plugin_registrar.h>
-#include <flutter/standard_method_codec.h>
 
 void WindowUtilsPlugin::RegisterWithRegistrar(flutter::PluginRegistrar *registrar)
 {

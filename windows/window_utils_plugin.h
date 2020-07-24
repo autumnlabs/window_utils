@@ -3,16 +3,11 @@
 #ifndef PLUGINS_EXAMPLE_window_utils_WINDOWS_H_
 #define PLUGINS_EXAMPLE_window_utils_WINDOWS_H_
 
-#include <flutter_plugin_registrar.h>
-
 #include <windows.h>
-#include <VersionHelpers.h>
 #include <flutter/method_channel.h>
+#include <flutter_plugin_registrar.h>
 #include <flutter/plugin_registrar.h>
 #include <flutter/standard_method_codec.h>
-#include <memory>
-#include <sstream>
-#include <unordered_map>
 
 #ifdef FLUTTER_PLUGIN_IMPL
 #define FLUTTER_PLUGIN_EXPORT __declspec(dllexport)
