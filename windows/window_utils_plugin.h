@@ -16,17 +16,18 @@
 #endif
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
-FLUTTER_PLUGIN_EXPORT void WindowUtilsPluginRegisterWithRegistrar(
-    FlutterDesktopPluginRegistrarRef registrar);
+    FLUTTER_PLUGIN_EXPORT void WindowUtilsPluginRegisterWithRegistrar(
+        FlutterDesktopPluginRegistrarRef registrar);
 
 #if defined(__cplusplus)
-}  // extern "C"
+} // extern "C"
 #endif
 
-#endif  // PLUGINS_EXAMPLE_window_utils_WINDOWS_H_
+#endif // PLUGINS_EXAMPLE_window_utils_WINDOWS_H_
 
 class WindowUtilsPlugin : public flutter::Plugin
 {
