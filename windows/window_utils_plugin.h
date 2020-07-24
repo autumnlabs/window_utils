@@ -30,7 +30,6 @@ FLUTTER_PLUGIN_EXPORT void WindowUtilsPluginRegisterWithRegistrar(
 
 class WindowUtilsPlugin : public flutter::Plugin
 {
-    RECT normalRect;
     RECT premaxWindowRect;
 
 public:
