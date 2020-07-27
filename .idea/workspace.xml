@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93874c0f-b884-4dfa-9278-fff2a6e584c0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/windows/window_utils_plugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/windows/window_utils_plugin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/PluginInfo.props" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/plugin.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/plugin.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/window_utils_plugin.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/window_utils_plugin.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +31,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ava_test" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
-  <component name="RunManager" selected="Flutter.example/lib/main.dart" />
+  <component name="RunManager" selected="Flutter.main.dart" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
