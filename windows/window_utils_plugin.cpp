@@ -75,12 +75,21 @@ void WindowUtilsPlugin::HandleMethodCall(
     }
     else if (method.compare("startResize") == 0)
     {
-        const flutter::EncodableValue *args = method_call.arguments();
-        const flutter::EncodableMap &map = args->MapValue();
-        bool top = map.at(flutter::EncodableValue("top")).BoolValue();
-        bool bottom = map.at(flutter::EncodableValue("bottom")).BoolValue();
-        bool left = map.at(flutter::EncodableValue("left")).BoolValue();
-        bool right = map.at(flutter::EncodableValue("right")).BoolValue();
+        const auto *args = std::get_if<flutter::EncodableMap>(method_call.arguments());
+
+        if (!args) {
+            result->Error(
+                "Bad Arguments",
+                "Argument map is missing or malformed."
+            );
+
+            return;
+        }
+
+        bool top = std::get<bool>(args->at(flutter::EncodableValue("top")));
+        bool bottom = std::get<bool>(args->at(flutter::EncodableValue("bottom")));
+        bool left = std::get<bool>(args->at(flutter::EncodableValue("left")));
+        bool right = std::get<bool>(args->at(flutter::EncodableValue("right")));
         HWND hWnd = GetActiveWindow();
         ReleaseCapture();
         LONG command = SC_SIZE;
@@ -212,10 +221,19 @@ void WindowUtilsPlugin::HandleMethodCall(
     }
     else if (method.compare("setSize") == 0)
     {
-        const flutter::EncodableValue *args = method_call.arguments();
-        const flutter::EncodableMap &map = args->MapValue();
-        int width = (int)map.at(flutter::EncodableValue("width")).DoubleValue();
-        int height = (int)map.at(flutter::EncodableValue("height")).DoubleValue();
+        const auto *args = std::get_if<flutter::EncodableMap>(method_call.arguments());
+
+        if (!args) {
+            result->Error(
+                "Bad Arguments",
+                "Argument map is missing or malformed."
+            );
+
+            return;
+        }
+
+        auto width = (int)std::get<double>(args->at(flutter::EncodableValue("width")));
+        auto height = (int)std::get<double>(args->at(flutter::EncodableValue("height")));
         HWND hWnd = GetActiveWindow();
         RECT rect;
         bool success = false;
@@ -232,10 +250,19 @@ void WindowUtilsPlugin::HandleMethodCall(
     }
     else if (method.compare("setPosition") == 0)
     {
-        const flutter::EncodableValue *args = method_call.arguments();
-        const flutter::EncodableMap &map = args->MapValue();
-        int x = (int)map.at(flutter::EncodableValue("x")).DoubleValue();
-        int y = (int)map.at(flutter::EncodableValue("y")).DoubleValue();
+        const auto *args = std::get_if<flutter::EncodableMap>(method_call.arguments());
+
+        if (!args) {
+            result->Error(
+                "Bad Arguments",
+                "Argument map is missing or malformed."
+            );
+
+            return;
+        }
+
+        auto x = (int)std::get<double>(args->at(flutter::EncodableValue("x")));
+        auto y = (int)std::get<double>(args->at(flutter::EncodableValue("y")));
         HWND hWnd = GetActiveWindow();
         RECT rect;
         bool success = false;
@@ -286,9 +313,18 @@ void WindowUtilsPlugin::HandleMethodCall(
     }
     else if (method.compare("setCursor") == 0)
     {
-        const flutter::EncodableValue *args = method_call.arguments();
-        const flutter::EncodableMap &map = args->MapValue();
-        std::string type = map.at(flutter::EncodableValue("type")).StringValue();
+        const auto *args = std::get_if<flutter::EncodableMap>(method_call.arguments());
+
+        if (!args) {
+            result->Error(
+                "Bad Arguments",
+                "Argument map is missing or malformed."
+            );
+
+            return;
+        }
+
+        auto type = std::get<std::string>(args->at(flutter::EncodableValue("type")));
         LPWSTR cursor = IDC_ARROW;
 
         // Map type to cursor
