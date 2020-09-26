@@ -3,11 +3,18 @@
 #ifndef PLUGINS_EXAMPLE_window_utils_WINDOWS_H_
 #define PLUGINS_EXAMPLE_window_utils_WINDOWS_H_
 
+// This must be included before many other Windows headers.
 #include <windows.h>
+
+#include <VersionHelpers.h>
 #include <flutter/method_channel.h>
-#include <flutter_plugin_registrar.h>
-#include <flutter/plugin_registrar.h>
+#include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
+
+#include <map>
+#include <memory>
+#include <sstream>
+#include <unordered_map>
 
 #ifdef FLUTTER_PLUGIN_IMPL
 #define FLUTTER_PLUGIN_EXPORT __declspec(dllexport)
@@ -34,11 +41,10 @@ class WindowUtilsPlugin : public flutter::Plugin
     RECT premaxWindowRect;
 
 public:
-    static void RegisterWithRegistrar(flutter::PluginRegistrar *registrar);
+    static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar);
 
     // Creates a plugin that communicates on the given channel.
-    WindowUtilsPlugin(
-        std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> channel);
+    WindowUtilsPlugin();
 
     virtual ~WindowUtilsPlugin();
 
