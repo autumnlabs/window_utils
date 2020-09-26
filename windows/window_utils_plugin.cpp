@@ -1,21 +1,15 @@
 #include "include/window_utils/window_utils_plugin.h"
 
-#include <memory>
-#include <sstream>
-#include <unordered_map>
-#include <VersionHelpers.h>
-
-void WindowUtilsPlugin::RegisterWithRegistrar(flutter::PluginRegistrar *registrar)
+void WindowUtilsPlugin::RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar)
 {
     auto channel =
-        std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-            registrar->messenger(), "window_utils",
-            &flutter::StandardMethodCodec::GetInstance());
-    auto *channel_pointer = channel.get();
+      std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
+          registrar->messenger(), "window_utils",
+          &flutter::StandardMethodCodec::GetInstance());
 
-    auto plugin = std::make_unique<WindowUtilsPlugin>(std::move(channel));
+    auto plugin = std::make_unique<WindowUtilsPlugin>();
 
-    channel_pointer->SetMethodCallHandler(
+    channel->SetMethodCallHandler(
         [plugin_pointer = plugin.get()](const auto &call, auto result) {
             plugin_pointer->HandleMethodCall(call, std::move(result));
         });
@@ -23,11 +17,9 @@ void WindowUtilsPlugin::RegisterWithRegistrar(flutter::PluginRegistrar *registra
     registrar->AddPlugin(std::move(plugin));
 }
 
-WindowUtilsPlugin::WindowUtilsPlugin(
-    std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> channel)
-    : channel_(std::move(channel)) {}
+WindowUtilsPlugin::WindowUtilsPlugin() {}
 
-WindowUtilsPlugin::~WindowUtilsPlugin(){};
+WindowUtilsPlugin::~WindowUtilsPlugin() {};
 
 void WindowUtilsPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
@@ -454,9 +446,7 @@ void WindowUtilsPlugin::UnmaximizeWindow()
 void WindowUtilsPluginRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar)
 {
-    // The plugin registrar owns the plugin, registered callbacks, etc., so must
-    // remain valid for the life of the application.
-    static auto *plugin_registrar = new flutter::PluginRegistrar(registrar);
-
-    WindowUtilsPlugin::RegisterWithRegistrar(plugin_registrar);
+    WindowUtilsPlugin::RegisterWithRegistrar(
+      flutter::PluginRegistrarManager::GetInstance()
+          ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar));
 }
