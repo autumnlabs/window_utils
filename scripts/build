@@ -1,1 +1,0 @@
-tar --exclude='.dart_tool' --exclude='.idea' --exclude='.vscode' --exclude='.git' --exclude='.github' --exclude='scripts' --exclude='example' -czvf ../window_utils_1.1.0.tar.gz .
