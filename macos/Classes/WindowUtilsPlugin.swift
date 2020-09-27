@@ -63,6 +63,14 @@ public class WindowUtils: NSObject, FlutterPlugin {
             let window = NSApplication.shared.keyWindow
             window?.center()
             result(true)
+        case "maxWindow":
+            let window = NSApplication.shared.keyWindow
+            window?.setIsZoomed(true)
+            result(true)
+        case "unmaxWindow":
+            let window = NSApplication.shared.keyWindow
+            window?.setIsZoomed(false)
+            result(true)
         case "setPosition":
             let args = call.arguments as? [String: Any]
             let x: Double = (args?["x"] as? Double)!

@@ -24,12 +24,12 @@ class WindowUtils {
     return _channel.invokeMethod<bool>('minWindow');
   }
 
-  /// [Windows] Only
+  /// [Windows and macOS] Only
   static Future<bool> maxWindow() {
     return _channel.invokeMethod<bool>('maxWindow');
   }
 
-  /// [Windows] Only
+  /// [Windows and macOS] Only
   static Future<bool> unmaxWindow() {
     return _channel.invokeMethod<bool>('unmaxWindow');
   }
@@ -86,7 +86,7 @@ class WindowUtils {
     return _channel.invokeMethod<bool>('windowTitleDoubleTap');
   }
 
-  /// [MacOS] Only
+  /// [macOS] Only
   static Future<int> childWindowsCount() {
     return _channel.invokeMethod<int>('childWindowsCount');
   }
